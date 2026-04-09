@@ -1,0 +1,601 @@
+================================================================================
+  MAGE KNIGHT FLUTTER — REGISTRO DE SEGUIMIENTO DEL PROYECTO
+================================================================================
+Proyecto  : Mage Knight (Clon móvil en Flutter)
+Inicio    : 2026-03-26
+Repositorio: d:\Projects\Flutter\mageknight
+--------------------------------------------------------------------------------
+CONVENCIONES DE ESTADO:
+  [PENDIENTE]   — Tarea planificada, aún no iniciada
+  [EN PROGRESO] — Tarea actualmente en desarrollo
+  [COMPLETADO]  — Tarea finalizada y verificada
+  [OMITIDO]     — Tarea descartada con justificación
+================================================================================
+
+
+================================================================================
+  FASE 1A — SISTEMA DE MAPA HEXAGONAL (ALCANCE REDUCIDO POR DECISIÓN DEL EQUIPO)
+  Objetivo: Dibujar el mapa hexagonal y permitir expandirlo por losetas segun
+            las reglas del Escenario 1 de Mage Knight. Sin dummy ni combate aun.
+================================================================================
+
+  ── BLOQUE 1: Arquitectura y Configuración Base ─────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — Creación del plan de implementación (implementation_plan.md)
+    [COMPLETADO] 2026-03-26 — Creación del archivo de seguimiento (seguimiento.txt)
+    [COMPLETADO] 2026-03-26 — pubspec.yaml actualizado con google_fonts ^6.2.1
+    [COMPLETADO] 2026-03-26 — Estructura de carpetas creada:
+                                lib/models/, lib/data/, lib/widgets/,
+                                lib/screens/, assets/images/
+
+  ── BLOQUE 2: Modelos de Datos (lib/models/) ────────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — hexagono.dart
+                   TipoTerreno enum (10 tipos), Hexagono con coordenadas
+                   axiales (q,r), color por terreno, costo de movimiento,
+                   estado esExplorado / esBorde, clave unica como string
+
+    [COMPLETADO] 2026-03-26 — loseta.dart
+                   Clase Loseta: grupo de 7 hexagonos definidos relativamente
+                   con soporte de rotacion axial en pasos de 60 grados.
+                   Clase MapaJuego: diccionario de celdas, mazo de losetas,
+                   logica de expansion desde borde, calculo automatico de
+                   bordes explorables.
+
+  ── BLOQUE 3: Datos del Juego (lib/data/) ───────────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — escenario_uno.dart
+                   7 losetas definidas: losetaInicio + A + B + C + D + E + F
+                   con tipos de terreno basados en reglas oficiales.
+                   Mapa de rutas de imagen por TipoTerreno (preparado para
+                   swap a assets originales). Funcion mazoEscenarioUno()
+                   que retorna las 6 losetas mezcladas aleatoriamente.
+
+  ── BLOQUE 4: Widgets (lib/widgets/) ─────────────────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — mapa_hex_painter.dart
+                   CustomPainter flat-top con conversion axial->pixel,
+                   colores por TipoTerreno, gradiente radial de textura,
+                   bordes dorados (seleccion) y cian con glow (borde explorable),
+                   iconos emoji por terreno, costo de movimiento visible,
+                   hit-testing con redondeo a hex mas cercano.
+
+    [COMPLETADO] 2026-03-26 — widget_mapa.dart
+                   InteractiveViewer (zoom 0.3x - 3.0x, pan libre) +
+                   GestureDetector con transformacion inversa de matriz 4x4
+                   para hit-testing correcto tras zoom/pan.
+                   Callbacks: onHexSeleccionado, onExpandir.
+
+  ── BLOQUE 5: Pantallas (lib/screens/) ──────────────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — pantalla_juego.dart
+                   PantallaJuego con MapaJuego inicializado en initState,
+                   SnackBar de feedback al expandir, panel inferior con info
+                   del hex seleccionado (nombre, coordenadas, costo de mov,
+                   descripcion del terreno), leyenda de colores, FAB de reinicio,
+                   AppBar con contador de losetas restantes.
+
+  ── BLOQUE 6: Integracion Final ──────────────────────────────────────────────
+
+    [COMPLETADO] 2026-03-26 — main.dart actualizado
+                   Tema oscuro medieval completo con GoogleFonts Cinzel,
+                   paleta (purpura magico, dorado medieval, rojo combate),
+                   orientacion forzada a landscape, modo inmersivo.
+                   Clase MageKnightApp reemplaza MyApp de plantilla.
+
+    [COMPLETADO] 2026-03-26 — widget_test.dart actualizado
+                   Test de smoke actualizado para referenciar MageKnightApp.
+
+    [COMPLETADO] 2026-03-26 — flutter analyze: 0 errores, 0 warnings
+                   (solo 1 info de doc comment corregido).
+
+    [COMPLETADO] 2026-03-26 — Prueba en emulador/dispositivo fisico (flutter run)
+                                - Solución de offset de hit-testing (GestureDetector y viewer infinito 10kx10k).
+                                - Mejora en logica de expansión: teselación perfecta de losetas 7-hex sin solapamiento.
+                                - Interfaz del panel de hexágono compactada (Row) con botón (X) y ID de loseta.
+                                - Reubicación del botón "Reiniciar" hacia el AppBar como un ActionChip.
+                                - Borde diferencial (grueso) pintado alrededor del perímetro de cada loseta 7-hex.
+                                - Íconos de terreno (Pantano🐊, Mazmorra🦇, Ruinas🏛️) actualizados.
+
+================================================================================
+  ESTADO FASE 1A: CODIGO COMPLETO — VERIFICADO EN DISPOSITIVO FÍSICO
+================================================================================
+
+
+================================================================================
+  FASE 1.5 (INTERMEDIA) — TOPOLOGÍA EXACTA DE LOSETAS OFICIALES [COMPLETADA]
+================================================================================
+  - [COMPLETADO] 2026-03-26 — Se implementó un scraper/parser manual sobre datos 
+                              de código abierto de Mage Knight (GitHub: Stoeoef) 
+                              para extraer la matriz 2D hexagonal exacta de las 
+                              losetas 1 a 11 y la loseta A.
+  - [COMPLETADO] 2026-03-26 — Separación de "Terreno Base" de "Sitio" (PDI). Un 
+                              monasterio o fortaleza ya no destruye el costo de 
+                              movimiento del terreno debajo sino que interactúa con él.
+  - [COMPLETADO] 2026-03-27 — Se habilitó Renderizado Dual: en un Hexágono se pinta
+                              tanto el ícono del terreno base (ej. Pradera 🌿) como el
+                              ícono del Sitio (ej. Aldea 🏘️) lado a lado.
+  - [COMPLETADO] 2026-03-27 — La arquitectura de expansión se limitó mediante un filtro
+                              matemático `FormaMapa.cuna` para forzar que el escenario 1
+                              crezca dentro del marco cónico oficial del juego.
+  - [COMPLETADO] 2026-03-27 — Se corrigió el cálculo de la forma de Cuña. Los vectores 
+                              directores apuntaban hacia la costa (izquierda/abajo). Se 
+                              corrigieron para usar (3,-2) y (1,-3), aislando correcta
+                              y matemáticamente que el crecimiento solo ocurra arriba y a
+                              la derecha, como dicta la regla del Escenario 1.
+  - [COMPLETADO] 2026-03-27 — Lógica de Mazo Híbrido: Se configuraron las primeras 8 
+                              losetas como Campo (Verdes) saliendo en orden exacto, 
+                              y las últimas 3 como Núcleo (Marrones) barajadas, de 
+                              las cuales una es obligatoriamente una Ciudad.
+  - [COMPLETADO] 2026-03-28 — Se corrigió la iconografía del terreno "Colina". Se 
+                              sustituyó `🏞️` por `🗻` (Monte Fuji/Meseta), logrando un 
+                              arte más cercano a una elevación no puntiaguda.
+  - [COMPLETADO] 2026-03-28 — Inclusión de Draconum (`🐉`) en Losetas de Núcleo. Se 
+                              actualizaron las definiciones de las losetas marrones 
+                              (c2, c4, c6) para reflejar su topología real, asegurando 
+                              presencia de enemigos de alto nivel al final del mazo.
+  - [COMPLETADO] 2026-03-28 — Refinamiento Estético de Iconos: Se cambió Colina a 
+                              `⛰️` (sin agua) y Montaña a `🏔️` (nevada). La Ciudad 
+                              ahora usa `🏙️` y se dibuja perfectamente centrada cuando 
+                              el terreno base está despejado.
+  - [COMPLETADO] 2026-03-28 — Sistema de Clasificación de Losetas: Se implementó 
+                              `TipoLoseta` para visualizar etiquetas combinadas como 
+                              "Loseta inicial (Portal)", "Loseta de campo (verde)" 
+                              y "Loseta central (marron)" en el panel de coordenadas.
+  - [COMPLETADO] 2026-03-28 — Notificaciones Superiores: Las alertas de revelado 
+                              de territorio y mensajes del sistema se movieron a la 
+                              parte superior de la pantalla con un diseño curvo y 
+                              efectos de brillo (Top Toast).
+  - [COMPLETADO] 2026-03-28 — AppBar Flotante y Persistencia: Se rediseñó la 
+                              AppBar como un widget del Stack para permitir que las 
+                              notificaciones floten sobre ella. El panel de 
+                              información ahora permanece abierto al expandir el mapa.
+  - [COMPLETADO] 2026-03-28 — Ajuste de Iconografía Final: Se intercambiaron los 
+                              iconos de Colina y Montaña para que Colina use el 
+                              icono de montaña nevada (más curvo/redondeado) y 
+                              Montaña use el pico estándar puntiagudo (`⛰️`).
+
+  - [COMPLETADO] 2026-03-29 — Minas Cromáticas (Revisión Final): Se aplicó un 
+                              borde negro (stroke) de 3px a las iniciales (V, A, R, B) 
+                              para garantizar que resalten sobre el fondo del icono, 
+                              solucionando problemas de contraste en las minas 
+                              verdes y azules.
+  - [COMPLETADO] 2026-03-29 — Ajustes Finales UI: Se redujo el tiempo de la 
+                              notificación a 2 segundos y se ajustó el formato de 
+                              información del hexágono para usar un separador `|` 
+                              en lugar de paréntesis para el tipo de loseta.
+
+================================================================================
+  FASE 1B — TOKEN DEL HEROE Y MOVIMIENTO BASICO  [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Modelo Heroe e Integración: Creado `heroe.dart` 
+                              y vinculado a `MapaJuego`. El héroe inicia en (0,0).
+  - [COMPLETADO] 2026-03-29 — Lógica de Movimiento: Validación de adyacencia, 
+                              terreno transitable y consumo de PM (Meadow: 2, 
+                              Forest/Hill: 3, etc.).
+  - [COMPLETADO] 2026-03-29 — Visualización del Token: Renderizado de un token 
+                              dorado con icono sobre el mapa. Resaltado de 
+                              movimientos posibles con borde verde neón.
+  - [COMPLETADO] 2026-03-29 — UI de Control: Añadido contador de puntos y 
+                              botón "Fin Turno". Se usa `P(m)` en lugar de `PM` 
+                              para evitar confusión horaria.
+
+================================================================================
+  FASE 1C — INTERACCION AVANZADA Y MINIATURA  [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Gestos Avanzados: Implementado pan/zoom de dos dedos.
+  - [COMPLETADO] 2026-03-29 — Drag-and-Drop: El héroe ya se puede arrastrar 
+                               físicamente para moverlo.
+  - [COMPLETADO] 2026-03-29 — Miniatura Deluxe (Vector 3D): Pieza con volumen, 
+                               pedestal y sombras proyectadas realistas.
+  - [RESUELTO] 2026-03-29 — Debug Drag-and-Drop: Corregido el espacio de 
+                             coordenadas mediante inversión de jerarquía de widgets.
+  - [VERIFICADO] 2026-03-29 — Sistema de gestos totalmente funcional en Pocophone F1.
+
+================================================================================
+  FASE 1D — ESTABILIZACION DE CAMARA Y CENTRADO  [COMPLETADO]
+================================================================================
+
+  - [VERIFICADO] 2026-03-29 — Botón Recentrar: Animación 'Fit Map' al 100%.
+
+================================================================================
+  FASE 1E — PULIDO VISUAL 'HEROE ULTRA-DELUXE'  [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Sprite PNG: Integrada imagen `heroe_principal.png` 
+                               con renderizado de alta calidad (FilterQuality.high).
+  - [COMPLETADO] 2026-03-29 — Pedestal Legendario: Grabados rúnicos (8 runas) 
+                               reactivos al color característica del héroe.
+  - [COMPLETADO] 2026-03-29 — Estela (Trail): Implementado rastro de luz mística 
+                               sincronizado con el color del héroe durante el arrastre.
+  - [COMPLETADO] 2026-03-29 — Impacto (Shockwave): Onda expansiva (Ripple) 
+                               de 800ms disparada al aterrizar la pieza con éxito.
+
+================================================================================
+  FASE 1G — MINIATURA FÍSICA Y AJUSTE DE INTERACCIÓN [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Pose Heroica de Reposo: Espada descansando en el 
+                               suelo para una estética icónica de miniatura.
+  - [COMPLETADO] 2026-03-29 — Renderizado 3D Estructural: Implementadas luces 
+                               especulares, Rim Light y sombra de contacto.
+  - [COMPLETADO] 2026-03-29 — Fix Interacción: Eliminada la apertura automática 
+                               del panel de información al soltar al héroe.
+  - [VERIFICADO] 2026-03-29 — El héroe ahora tiene "peso" percibido y no 
+                               interrumpe la navegación al moverlo.
+
+================================================================================
+  FASE 1H — MINIATURA PROFESIONAL DE ALTA GAMA [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Reintegración de PNG: Restaurado el uso de 
+                               'heroe_principal.png' como base visual.
+  - [COMPLETADO] 2026-03-29 — Motor 'Senior' Render: Implementada iluminación 
+                               procedural (Rim Light) sobre los bordes del PNG.
+  - [COMPLETADO] 2026-03-29 — Glossy Sheen: Añadido brillo especular dinámico 
+                               para simular material plástico/resina.
+  - [COMPLETADO] 2026-03-29 — Sombra de Tierra: Implementado Ground Shadow con 
+                               blur gaussiano variable según elevación.
+  - [VERIFICADO] 2026-03-29 — La pieza ahora tiene una presencia física de 
+                               alto nivel, fusionando asset 2D con efectos 3D.
+
+================================================================================
+  FASE 1I — AJUSTES DE ESCALA Y NAVEGACIÓN      [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Zoom del Héroe: Incrementado el tamaño visual al 
+                               ~60% del hexágono para una presencia imponente.
+  - [COMPLETADO] 2026-03-29 — Auto-Center Fix: Implementado PostFrameCallback 
+                               que centra el Portal de inicio automáticamente.
+  - [VERIFICADO] 2026-03-29 — Fase 1 Concluida: Mapa y Héroe cumplen con los 
+                               estándares de fidelidad y UX requeridos.
+
+================================================================================
+  FASE 1J — ESCALA DEFINITIVA Y RESINCRONIZACIÓN [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Escala 75%: Tamaño de miniatura aumentado al 
+                               75% del hexágono para máximo impacto visual.
+  - [COMPLETADO] 2026-03-29 — Resincronización: Actualizados task.md, 
+                               seguimiento.txt y walkthrough.md.
+  - [VERIFICADO] 2026-03-29 — Cierre oficial de Fase 1. Listos para Fase 2.
+
+================================================================================
+  FASE 1L — CENTRADO DEFINITIVO Y DESELECCIÓN   [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Precisión Matemática: Reducido boundaryMargin a 
+                               600px para eliminar errores de matriz.
+  - [COMPLETADO] 2026-03-29 — Doble Centrado: Implementado salto inicial + 
+                               corrección fina diferida (600ms) al arranque.
+  - [COMPLETADO] 2026-03-29 — Autolimpieza: El botón de recentrar ahora limpia 
+                               la selección y oculta el panel de info.
+  - [VERIFICADO] 2026-03-29 — Estabilidad total del motor de mapa alcanzada.
+
+================================================================================
+  FASE 1M — CENTRADO DINÁMICO MAPA-HÉROE         [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-03-29 — Lógica Dual: Refactorizado recentrarMapa para 
+                               alternar entre bounding-box global y foco táctico.
+  - [COMPLETADO] 2026-03-29 — Iconografía Secuencial: Implementado cambio 
+                               dinámico de iconos (Explore vs DirectionsRun).
+  - [COMPLETADO] 2026-03-29 — Zoom de Loseta: El centrado en el héroe aplica 
+                               un targetScale de 1.0 (vista de detalle).
+  - [COMPLETADO] 2026-03-29 — Fix GlobalKey: El motor ahora mide el área real 
+                               ignorando la AppBar y paneles laterales.
+  - [VERIFICADO] 2026-03-29 — Sistema de navegación profesional concluido.
+
+================================================================================
+  FASE 1N — NAVEGACIÓN NATIVA Y ARRASTRE TÁCTICO [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-04-04 — Pan 1 Dedo: Restituido el desplazamiento natural
+                               del mapa a un solo dedo de manera libre.
+  - [COMPLETADO] 2026-04-04 — Long-Press Inteligente (1s): El héroe ahora 
+                               requiere mantener el dedo pulsado por 1 segundo 
+                               para activarse, evitando arrastres accidentales.
+  - [COMPLETADO] 2026-04-04 — Feedback Háptico: Inyectado permiso VIBRATE
+                               y cambiado a HeavyImpact en AndroidManifest.
+  - [COMPLETADO] 2026-04-04 — Umbral de Estabilidad: Elevado a 25.0 píxeles 
+                               para evitar cancelaciones por microsacudidas.
+  - [COMPLETADO] 2026-04-05 — Retención Nativa (onLongPress): Sistema de timers
+                               manuales extirpado. Se usa el motor de arenas de 
+                               Flutter logrando retención perfecta en 500ms y 
+                               desplazamiento a 1 dedo sin fricciones falsas.
+  - [COMPLETADO] 2026-04-05 — Refinado de Escala (v1.5.1): Reducido el 
+                               agrandamiento al 8% (factor 1.296) al alzar al 
+                               héroe para mayor naturalidad.
+  - [VERIFICADO] 2026-04-05 — Control absoluto sin retardos.
+
+================================================================================
+  FASE 2 — IDENTIDAD DE HÉROE Y RECURSOS ESTRATÉGICOS [COMPLETADO]
+================================================================================
+
+  ── BLOQUE 1: Sistema de Héroes Dinámicos ───────────────────────────────────
+
+  - [COMPLETADO] 2026-03-29 — Refactorización Heroe: Añadido imageName y 
+                               colorRastro con identidad visual por personaje.
+  - [COMPLETADO] 2026-03-29 — Catálogo de Héroes: Tovak (dorado/ámbar) y 
+                               Goldyx (rojo/plasma) con sprites independientes.
+  - [COMPLETADO] 2026-03-29 — Recarga en Caliente: didUpdateWidget detecta 
+                               cambio de imageName y recarga el PNG sin resetear.
+  - [COMPLETADO] 2026-03-29 — Rastro Místico: Estela y onda de impacto usan  
+                               colorRastro propio de cada héroe.
+  - [COMPLETADO] 2026-03-29 — Selector de Héroe: Botón en AppBar con nombre, 
+                               ícono y color del personaje activo.
+  - [VERIFICADO] 2026-03-29 — Assets heroe1.png y heroe2.png integrados.
+
+  ── BLOQUE 2: Panel de Recursos Estratégicos ────────────────────────────────
+
+  - [COMPLETADO] 2026-03-29 — Dashboard Táctico: Nuevo panel Glassmorphism 
+                               a la izquierda que centraliza todos los puntos.
+  - [COMPLETADO] 2026-03-29 — Expansión de Recursos: Integrados P(m), P(i), 
+                               P(a), P(b) y P(c) en el modelo Heroe.
+  - [COMPLETADO] 2026-03-29 — Iconografía: 👣(Mov), 👤(Inf), ⚔️(Atk), 🛡️(Blk), 
+                               ❤️(Cur) con colores temáticos.
+  - [COMPLETADO] 2026-03-29 — Toggle AppBar: Botón 'Dashboard' que despliega
+                               u oculta la información táctica en tiempo real.
+  - [COMPLETADO] 2026-03-29 — Test Data: P(m) inicial subido a 26 puntos.
+  - [COMPLETADO] 2026-04-04 — Ajuste UX Panel Estratégico: Mayor legibilidad 
+                               y ancho reducido para mejor ergonomía.
+  - [COMPLETADO] 2026-04-04 — Refinamiento Táctico: Tamaño de números 
+                               ajustado a 12 para equilibrio visual en Dashboard.
+  - [COMPLETADO] 2026-04-04 — Ajuste UX Panel Info: Reducción de altura y 
+                               compactación de texto de descripción.
+  - [VERIFICADO] 2026-04-04 — Interfaz móvil optimizada para visualización clara.
+
+================================================================================
+  FASE 3 — EL PODER DE LA FUENTE (SISTEMA DE MANÁ) [COMPLETADO]
+================================================================================
+
+  - [COMPLETADO] 2026-04-05 — La Fuente (Dice Source): Implementación de los 
+                               3 dados con probabilidades MK (1/6 por cara).
+  - [COMPLETADO] 2026-04-05 — Ciclo Día/Noche: Mecánica de anulación de dados 
+                               Negros al Sol y Dorados a la Luna (🚫).
+  - [COMPLETADO] 2026-04-05 — Refinamiento AppBar (v2.4.2): Selector de héroe 
+                               minimalista y dado 🎲 (24.0) para claridad táctica.
+  - [COMPLETADO] 2026-04-05 — Selección Mágica (v3.0.6): Aura Rosa Neón (fuerza 14) 
+                               y borde (3.0) con toggle para des-seleccionar.
+  - [VERIFICADO] 2026-04-05 — Sistema de Maná táctico y visualmente robusto.
+
+================================================================================
+  FASE 4 — REFACTORIZACIÓN ARQUITECTÓNICA                    [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Preparar el código para multi-escenario, multi-jugador y
+            assets intercambiables sin romper nada de lo existente.
+
+  BLOQUE A — Archivos Nuevos (Riesgo CERO)
+
+  - [COMPLETADO] 2026-04-06 — lib/core/constants.dart: Paleta de colores,
+                              duraciones y medidas centralizadas. 0 valor
+                              mágico hardcoded en código de widgets.
+  - [COMPLETADO] 2026-04-06 — lib/core/reglas/reglas_base.dart: Interfaz
+                              abstracta ReglaJuego. Contrato parametrizable
+                              para dados, movimiento y stats de héroes.
+  - [COMPLETADO] 2026-04-06 — lib/core/reglas/reglas_escenario1.dart:
+                              Implementación oficial de las reglas del 
+                              Escenario 1 (Mata-Magiá, movimiento, etc.).
+  - [COMPLETADO] 2026-04-06 — lib/config/asset_paths.dart: Registro único
+                              de rutas de assets. Cambiar arte original =
+                              modificar solo este archivo.
+  - [COMPLETADO] 2026-04-06 — lib/config/catalogo_heroes.dart: Lista de
+                              héroes extraida de la UI. Fuente canónica de
+                              personajes jogables.
+  - [COMPLETADO] 2026-04-06 — lib/config/catalogo_escenarios.dart: Registro
+                              extensible de escenarios. Soporte para Fase 5+.
+  - [COMPLETADO] 2026-04-06 — lib/models/sesion_juego.dart: GameState
+                              unificado con motor de Undo/Redo (patrón
+                              Command). Historial de 20 acciones máx.
+                              Comandos: MoverHéroe, CambiarCiclo, FinTurno.
+
+  BLOQUE B — Backward-Compatible (Riesgo BAJO)
+
+  - [COMPLETADO] 2026-04-06 — models/loseta.dart: MapaJuego.inicializar()
+                              acepta heroeInicial opcional (SesionJuego).
+                              Fallback a Tovak si null (retrocompat.).
+  - [COMPLETADO] 2026-04-06 — models/fuente_magia.dart: Soporte opcional
+                              de ReglaJuego. limiteDados ahora parametrizable.
+                              Método público aplicarReglaIncompatible() para
+                              el motor de undo/redo.
+
+  BLOQUE C — Cableado en Pantalla (Riesgo MEDIO)
+
+  - [COMPLETADO] 2026-04-06 — screens/pantalla_juego.dart: Migrado a
+                              SesionJuego. Getters _mapa y _fuenteMagia
+                              conservan el 100% del código existente. Stats
+                              del héroe ahora provienen de ReglaJuego.
+
+  - [VERIFICADO] 2026-04-06 — dart analyze: 0 errores, 0 warnings nuevos.
+                              9 issues preexistentes (deprecated_member_use
+                              en widget_mapa.dart, fuera del alcance).
+
+================================================================================
+  FASE 4B — EL PERGAMINO DE MEMORIA (HISTORIAL)              [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Implementar la visualización del historial y la funcionalidad
+            de Deshacer/Rehacer restringida por turnos.
+
+  HITOS TÉCNICOS:
+  - [COMPLETADO] 2026-04-06 — lib/models/sesion_juego.dart: Sistema de turnos 
+                              en el motor de comandos. Cada acción ahora 
+                              conoce su "Timestamp de Turno".
+  - [COMPLETADO] 2026-04-06 — v1.6.0: Límite de historial visual ampliado a 30 
+                              acciones para mayor claridad táctica.
+  - [COMPLETADO] 2026-04-06 — lib/widgets/widget_historial.dart: UI Premium 
+                              Glassmorphism lateral derecho. Highlight de 
+                              acciones del turno actual vs opacidad en turnos 
+                              pasados.
+  - [COMPLETADO] 2026-04-06 — screens/pantalla_juego.dart: Toggle de 
+                              visibilidad (Icons.history) en AppBar. 
+                              Independiente de los paneles de dados y estrategia.
+  - [VERIFICADO] 2026-04-06 — Lógica de Deshacer: Solo se permiten deshacer 
+                              movimientos del turno en curso. Al presionar 
+                              "Fin de Turno", las acciones previas se sellan.
+
+================================================================================
+  FASE 4C — REFINAMIENTO Y CORRECCIÓN DE BUGS                [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Corregir el cableado del historial y mejorar la estética del panel.
+
+  CORRECCIONES REALIZADAS:
+  - [CABLEADO] 2026-04-06 — onHeroeMovido y onExpandir en pantalla_juego.dart 
+                             ahora llaman a SesionJuego, permitiendo que las 
+                             acciones físicas se registren en el Pergamino.
+  - [CABLEADO] 2026-04-06 — WidgetFuenteMana: se añadió callback onCicloTap 
+                             inyectando cambiarCiclo() de la sesión. 
+                             Día/Noche ahora es reversible.
+  - [ESTÉTICA] 2026-04-06 — Icono de pergamino actualizado a Icons.history_edu.
+  - [LAYOUT  ] 2026-04-06 — Fix Overflow: uso de FittedBox y Flexible en el 
+                             header del WidgetHistorial + incremento de ancho.
+
+================================================================================
+  FASE 4D — MANIOBRA DE LARGA DISTANCIA                     [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Mejorar la mecánica de desplazamiento con saltos en línea recta
+            y feedback visual de costo.
+
+  HITOS TÉCNICOS:
+  - [ALGORITMO] 2026-04-06 — loseta.dart: Cálculo de dq, dr, ds para validar 
+                               línea recta y lerp axial para ruta intermedia.
+  - [ALGORITMO] 2026-04-06 — loseta.dart: calcularCostoRuta suma los costos 
+                               de terreno de cada hex de la trayectoria.
+  - [UI/UX    ] 2026-04-06 — mapa_hex_painter.dart: Se eliminó el resaltado 
+                               de vecinos. Se añadió indicador dinámico de 
+                               costo en origen con Icons.directions_run.
+  - [UI/UX    ] 2026-04-06 — mapa_hex_painter.dart: Implementación de 'X' roja 
+                               para trayectorias inválidas o bloqueadas.
+  - [CABLEADO ] 2026-04-06 — PantallaJuego → WidgetMapa: Inyección de 
+                               obtenerCostoRuta para feedback instantáneo.
+
+================================================================================
+  FASE 4E — EL PERGAMINO COMPACTO (REFINAMIENTO)            [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Optimizar el historial para dispositivos móviles y mejorar la
+            legibilidad con nuevas fuentes y formatos compactos.
+
+  HITOS TÉCNICOS:
+  - [UI/UX    ] 2026-04-07 — Reducción de ancho (-15%) y altura responsiva (Max 80%).
+  - [UI/UX    ] 2026-04-07 — Formato Lineal: `T# Descripción` eliminando ruidos.
+  - [TIPOGRAFÍA] 2026-04-07 — Migración a GoogleFonts.marcellus para soportar 
+                               minúsculas y mejorar la elegancia del pergamino.
+  - [LIMPIEZA  ] 2026-04-07 — Eliminación de iconos redundantes y simplificación 
+                               de botones de control (Icon-only).
+
+================================================================================
+  FASE 4F — LIMPIEZA Y CENTRO DE MANDO                      [COMPLETADO]
+================================================================================
+
+  OBJETIVO: Descongestionar la interfaz principal y centralizar comandos
+            administrativos en un modal técnico (Centro de Mando).
+
+  HITOS TÉCNICOS:
+  - [ESTRUCTURA] 2026-04-07 — AppBar minimalista (48px) libre de elementos
+                               secundarios (Losetas, Reiniciar, etc.).
+  - [UI/UX    ] 2026-04-07 — Centro de Mando: Modal Glassmorphism azul cian 
+                               (60% ancho) que aloja el mazo, stats y reinicio.
+  - [SEGURIDAD ] 2026-04-07 — Implementación de Diálogo de Confirmación para
+                               Reinicio de partida y Fin de Turno.
+  - [ERGONOMÍA ] 2026-04-07 — Resolución de colisión de widgets: Controles de 
+                               historial alineados a la izquierda para liberar 
+                               el botón circular de cámara.
+
+================================================================================
+  FASE 5A — ESTRUCTURA DE CARTAS Y MANO          [COMPLETADA] 2026-04-07
+================================================================================
+
+  - [MODELO]   2026-04-07 — Creación de la clase `Carta` con ID Interno, 
+                               Número Oficial (001-064) y Categoría.
+  - [DATA  ]   2026-04-07 — Diccionario `CatalogoCartas` con 64 cartas 
+                               únicas organizadas por bloques de héroe.
+  - [MOTOR ]   2026-04-07 — Implementación de `MazoHeroe` que gestiona 
+                               el mazo por barajar, la mano y el descarte.
+  - [UI/UX ]   2026-04-07 — WidgetMano: Sistema de miniaturas colapsables 
+                               en el borde inferior con vista expandida modal.
+  - [VISUAL]   2026-04-07 — WidgetCarta: Renderizado de cartas con bordes
+                               místicos, efecto de potenciación y visor de 
+                               número oficial (#XXX) integrado.
+
+================================================================================
+  FASE 5B — PANEL ESTRATÉGICO Y ÁREA TÁCTICA     [COMPLETADA] 2026-04-08
+================================================================================
+
+  - [UI/UX ]   2026-04-08 — WidgetStrategicPanel: Nueva interfaz modal dividida 
+                               en Carrusel, Área de Trabajo y Visor de Zoom.
+  - [LOGICA]   2026-04-08 — Manipulación: Arrastre de cartas al área de trabajo 
+                               y sistema de rotación (Giro 90°) al toque.
+  - [VISUAL]   2026-04-08 — Miniaturas: Rediseño ultra-compacto (45px) con 
+                               títulos en minúsculas e íconos de puntos base.
+  - [UI/UX ]   2026-04-08 — Pulido Senior (5B.2): Animación de entrada Scale/Fade, 
+                               Glow de selección dorado y fondo estilo cuero.
+  - [LOGICA]   2026-04-08 — Reversibilidad: Long-press para remover de mesa. 
+                               Sincronización de rotación en el Visor Zoom.
+  - [LOGICA]   2026-04-08 — Fix Errores: Solucionado Assertion Opacity (clamp) 
+                               y RenderFlex overflow en cartas (Scrollable).
+  - [LOGICA]   2026-04-08 — Fix Arquitectura: Corrección de error de 
+                               posicionamiento (Stack/Positioned) en el panel.
+
+================================================================================
+  FASE 5-S — MANTENIMIENTO Y SINCRONIZACIÓN TOTAL [COMPLETADA] 2026-04-08
+============================================================================
+  - [SYNK]     2026-04-08 — Task Maestro: Refactorización total de task.md para 
+                               reflejar el Roadmap global (Fases 1 a 6+).
+  - [SYNK]     2026-04-08 — Soporte Heróico: MazoHeroe y CatalogoHeroes ahora 
+                               soportan a Tovak, Goldyx, Arythea y Norowas.
+  - [SYNK]     2026-04-08 — Sincronización: Audit de todos los archivos de 
+                               seguimiento para garantizar paridad con el código.
+
+================================================================================
+  FASE 5C — SOPORTE DE ARTE Y ASSETS             [COMPLETADA] 2026-04-08
+================================================================================
+
+  - [MODELO]   2026-04-08 — Se añadió el campo `imagenNombre` a `Carta` para 
+                               vincular archivos .png externos.
+  - [DATA  ]   2026-04-08 — Catálogo actualizado con 64 placeholders de arte 
+                               específicos (ej. `art_march`, `art_rage`).
+  - [UI/UX ]   2026-04-08 — WidgetCarta: Rediseño físico con área de ilustración 
+                               de 80px y sistema de placeholders premium 
+                               con degradados temáticos.
+  - [VISUAL]   2026-04-08 — Escalado: Las miniaturas del panel estratégico 
+                               ahora reflejan el arte de la carta a escala.
+  - [STABL ]   2026-04-08 — Compatibilidad: Reversión de .withValues() a 
+                               .withOpacity() para soporte universal de SDKs.
+  - [UI/UX ]   2026-04-08 — Fase 5E/5F: Rediseño completo de Mano (Fan Layout) 
+                               y Visor de Zoom interactivo con carrusel.
+  - [DATA  ]   2026-04-08 — Fase 5G: Normalización de IDs (BasicAction_###, 
+                               HeroAction_###) para unicidad absoluta.
+  - [UI/UX ]   2026-04-08 — Refinamiento Final: Inmersión al 10% y Zoom Elevado 
+                               25px con gestión de capas (Z-Index).
+  - [UI/UX ]   2026-04-08 — Fase 5K: Visor Cinemático (Evolucionado a 5L).
+  - [UI/UX ]   2026-04-08 — Fase 5L: Visor Infinito Mountain-Fan (Estética Final: 
+                               Escala 2.8, Curva Suave, Altura 600px).
+
+================================================================================
+  FASE 5D — LÓGICA DE JUEGO Y RECURSOS          [PLANIFICADA]
+================================================================================
+
+  - [RECURSOS] Integración en Panel Estratégico: Maná (Normal/Cristal) e 
+               inventario de Cristales.
+  - [FUENTE  ] Visualización y uso de dados de la Fuente de Magia.
+  - [HÉROE   ] Habilidades únicas y fichas de habilidad en el panel.
+  - [UNIDADES] Sección de Unidades aliadas y su gestión en el área de trabajo.
+  - [COMBATE ] Resolución de efectos de cartas, Atq/Blq y daño.
+
+================================================================================
+  FASE 6 — CONQUISTA DE SITIOS                  [PLANIFICADA — NO INICIADA]
+================================================================================
+
+  Incluira: Backend con API REST / WebSockets, multiples heroes simultaneos,
+            sesiones de partida en linea.
+
+================================================================================
+
+
+  --- FIN DEL ARCHIVO ---
