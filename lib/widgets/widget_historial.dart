@@ -27,27 +27,30 @@ class WidgetHistorial extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
-              width: 238, // [Fase 4E] Reducido un 15% (de 280)
+              width: 190, // [Fase 5E] Reducido para mayor limpieza visual
               constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8, // [Fase 4E] Ajuste responsivo
+                maxHeight:
+                    MediaQuery.of(context).size.height *
+                    0.8, // [Fase 4E] Ajuste responsivo
               ),
               decoration: BoxDecoration(
-                color: AppColors.fondoPanel.withOpacity(0.8),
+                color: AppColors.fondoPanel.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppColors.dorado.withOpacity(0.3),
+                  color: AppColors.dorado.withValues(alpha: 0.3),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
+                    color: Colors.black.withValues(alpha: 0.4),
                     blurRadius: 15,
                     spreadRadius: 2,
                   ),
                 ],
               ),
               child: Column(
-                mainAxisSize: MainAxisSize.min, // [Fase 4E] Para que el panel no ocupe más de lo necesario
+                mainAxisSize: MainAxisSize
+                    .min, // [Fase 4E] Para que el panel no ocupe más de lo necesario
                 children: [
                   // ── Cabecera ──────────────────────────────────────────────
                   _buildHeader(),
@@ -74,9 +77,7 @@ class WidgetHistorial extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: Border.all(color: Colors.white10).bottom,
-        ),
+        border: Border(bottom: Border.all(color: Colors.white10).bottom),
       ),
       child: Row(
         children: [
@@ -101,7 +102,7 @@ class WidgetHistorial extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: AppColors.dorado.withOpacity(0.1),
+              color: AppColors.dorado.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -133,28 +134,35 @@ class WidgetHistorial extends StatelessWidget {
 
   Widget _buildActionList(List<ComandoJuego> acciones) {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10), // [Fase 4E] Reducido
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 10,
+      ), // [Fase 4E] Reducido
       itemCount: acciones.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 4), // [Fase 4E] Reducido
+      separatorBuilder: (_, _) =>
+          const SizedBox(height: 4), // [Fase 4E] Reducido
       itemBuilder: (context, index) {
         final cmd = acciones[index];
         final esTurnoActual = cmd.turno == sesion.turnoActual;
 
         // [Fase 4E] Procesar descripción para Sentence case
-        final descFinal = cmd.descripcion.isNotEmpty 
+        final descFinal = cmd.descripcion.isNotEmpty
             ? cmd.descripcion[0].toUpperCase() + cmd.descripcion.substring(1)
             : '';
 
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8), // [Fase 4E] Reducido
+          padding: const EdgeInsets.symmetric(
+            vertical: 6,
+            horizontal: 8,
+          ), // [Fase 4E] Reducido
           decoration: BoxDecoration(
-            color: esTurnoActual 
-                ? Colors.white.withOpacity(0.05) 
-                : Colors.black.withOpacity(0.2),
+            color: esTurnoActual
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
-              color: esTurnoActual 
-                  ? AppColors.dorado.withOpacity(0.15) 
+              color: esTurnoActual
+                  ? AppColors.dorado.withValues(alpha: 0.15)
                   : Colors.transparent,
             ),
           ),
@@ -192,11 +200,10 @@ class WidgetHistorial extends StatelessWidget {
   Widget _buildControls(bool puedeDeshacer, bool puedeRehacer) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: const BoxDecoration(
-        color: Colors.black26,
-      ),
+      decoration: const BoxDecoration(color: Colors.black26),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // [Fase 4F.3] Cambio a inicio absoluto
+        mainAxisAlignment:
+            MainAxisAlignment.start, // [Fase 4F.3] Cambio a inicio absoluto
         children: [
           _buildButton(
             icon: Icons.undo,
@@ -225,10 +232,12 @@ class WidgetHistorial extends StatelessWidget {
         width: 42, // [Fase 4F] Ancho fijo para mayor precisión espacial
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: activo ? AppColors.dorado.withOpacity(0.2) : Colors.white10,
+          color: activo ? AppColors.dorado.withValues(alpha: 0.2) : Colors.white10,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: activo ? AppColors.dorado.withOpacity(0.5) : Colors.white.withOpacity(0.05),
+            color: activo
+                ? AppColors.dorado.withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.05),
           ),
         ),
         child: Row(

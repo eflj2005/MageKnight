@@ -318,16 +318,16 @@ class WidgetMapaState extends State<WidgetMapa> with TickerProviderStateMixin {
                 _posicionInicialFoco = details.localFocalPoint;
 
                 final Matrix4 matrix = _transformController.value.clone();
-                matrix.translate(delta.dx, delta.dy);
+                matrix.translateByDouble(delta.dx, delta.dy, 0.0, 1.0);
 
                 if (details.scale != 1.0) {
                   final double deltaScale = details.scale / _ultimoScale;
                   _ultimoScale = details.scale;
                   final Offset focalPoint = details.localFocalPoint;
                   final Matrix4 scaleMatrix = Matrix4.identity()
-                    ..translate(focalPoint.dx, focalPoint.dy)
-                    ..scale(deltaScale)
-                    ..translate(-focalPoint.dx, -focalPoint.dy);
+                    ..translateByDouble(focalPoint.dx, focalPoint.dy, 0.0, 1.0)
+                    ..scaleByDouble(deltaScale, deltaScale, 1.0, 1.0)
+                    ..translateByDouble(-focalPoint.dx, -focalPoint.dy, 0.0, 1.0);
                   matrix.multiply(scaleMatrix);
                 }
                 _transformController.value = matrix;
@@ -408,9 +408,9 @@ class WidgetMapaState extends State<WidgetMapa> with TickerProviderStateMixin {
 
     // 3. Crear la Matriz destino
     final targetMatrix = Matrix4.identity()
-      ..translate(effectiveSize.width / 2, effectiveSize.height / 2)
-      ..scale(targetScale)
-      ..translate(-centerX, -centerY);
+      ..translateByDouble(effectiveSize.width / 2, effectiveSize.height / 2, 0.0, 1.0)
+      ..scaleByDouble(targetScale, targetScale, 1.0, 1.0)
+      ..translateByDouble(-centerX, -centerY, 0.0, 1.0);
 
     if (!animado) {
       _transformController.value = targetMatrix;

@@ -244,7 +244,8 @@ class MapaJuego {
   }
 
   /// Coloca una loseta en el mapa con el centro en (qOrigen, rOrigen).
-  void _colocarLoseta(Loseta loseta, {
+  /// Devuelve la lista de claves de las celdas añadidas para auditoría.
+  List<String> _colocarLoseta(Loseta loseta, {
     required int qOrigen,
     required int rOrigen,
     required int rotacion,
@@ -254,11 +255,14 @@ class MapaJuego {
       rOrigen: rOrigen,
       rotacion: rotacion,
     );
+    final clavesAnadidas = <String>[];
     for (final hex in hexagonos) {
       if (!celdas.containsKey(hex.clave)) {
         celdas[hex.clave] = hex;
+        clavesAnadidas.add(hex.clave);
       }
     }
+    return clavesAnadidas;
   }
 
   /// Retorna las coordenadas del centro geométrico de la loseta a la que
@@ -303,37 +307,78 @@ class MapaJuego {
         final nR = cR + dir.$2;
         
         // Limitar la forma del mapa a un Cono (Wedge) matemático
-        // donde los vectores base del crecimiento cónico son (3,-2) y (1,-3).
         if (formaMapa == FormaMapa.cuna) {
           final int u7 = 3 * nQ + nR;
           final int v7 = -2 * nQ - 3 * nR;
-          if (u7 < 0 || v7 < 0) continue; // Descartar si está fuera de la cuña
+          if (u7 < 0 || v7 < 0) continue; 
         }
 
         final nClave = '$nQ,$nR';
         if (!centrosExistentes.contains(nClave)) {
-          fantasmas.add(nClave);
+          // [REGLA Mage Knight] Solo mostrar fantasmas si el héroe está 
+          // en un borde adyacente a ese territorio.
+          if (esHeroeAdyacenteALoseta(nQ, nR)) {
+            fantasmas.add(nClave);
+          }
         }
       }
     }
     return fantasmas;
   }
 
+  /// Verifica si el héroe está en una posición desde la que puede descubrir
+  /// la loseta que se centraría en [targetQ],[targetR].
+  bool esHeroeAdyacenteALoseta(int targetQ, int targetR) {
+    if (_heroe == null) return false;
+    
+    // Una loseta tiene 7 hexágonos. 
+    // Basta que el héroe sea vecino de cualquiera de ellos.
+    final offsetsLoseta = [
+      (0, 0), (1, 0), (0, 1), (-1, 1), (-1, 0), (0, -1), (1, -1)
+    ];
+
+    for (final off in offsetsLoseta) {
+      final hQ = targetQ + off.$1;
+      final hR = targetR + off.$2;
+      if (distancia(_heroe!.q, _heroe!.r, hQ, hR) == 1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// Expande el mapa colocando la siguiente loseta del mazo con su CENTRO
   /// exactamente en [q],[r] (la posición del hexágono fantasma tocado).
-  /// Retorna true si la expansión fue exitosa, false si el mazo está agotado.
-  bool expandirEn(int q, int r) {
-    if (mazoAgotado) return false;
-    final loseta = _mazo.removeAt(0);
+  /// Retorna la Loseta revelada, o null si falló o no fue posible.
+  Loseta? expandirEn(int q, int r) {
+    if (mazoAgotado) return null;
     
-    // Mage Knight regla: la rotación siempre se alinea de la misma 
-    // forma que la loseta inicial. No hay rotación aleatoria.
+    // Validación de adyacencia según reglas
+    if (!esHeroeAdyacenteALoseta(q, r)) return null;
+
+    final loseta = _mazo.removeAt(0);
     const rotacion = 0; 
     
     _colocarLoseta(loseta, qOrigen: q, rOrigen: r, rotacion: rotacion);
     _losetasReveladas++;
     _actualizarBordes();
-    return true;
+    return loseta;
+  }
+
+  /// Revierte la expansión de una loseta (Undo).
+  void revertirExpansion(Loseta loseta, int q, int r) {
+    // 1. Identificar hexágonos de esta loseta y eliminarlos
+    final hexagonos = loseta.generarHexagonos(qOrigen: q, rOrigen: r, rotacion: 0);
+    for (final hex in hexagonos) {
+      celdas.remove(hex.clave);
+    }
+
+    // 2. Devolver loseta al inicio del mazo
+    _mazo.insert(0, loseta);
+    _losetasReveladas--;
+
+    // 3. Recalcular bordes
+    _actualizarBordes();
   }
 
   /// Recalcula qué celdas son "borde explorable".

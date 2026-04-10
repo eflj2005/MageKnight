@@ -153,7 +153,7 @@ class MapaHexPainter extends CustomPainter {
     // Borde básico/fino
     final paintStroke = Paint()
       ..style = PaintingStyle.stroke
-      ..color = hex.esBorde ? const Color(0xFF00E5FF).withOpacity(0.5) : Colors.white10
+      ..color = hex.esBorde ? const Color(0xFF00E5FF).withValues(alpha: 0.5) : Colors.white10
       ..strokeWidth = 1.0;
     canvas.drawPath(path, paintStroke);
 
@@ -211,7 +211,7 @@ class MapaHexPainter extends CustomPainter {
 
     if (esSeleccionado) {
       canvas.drawPath(path, Paint()
-        ..color = const Color(0xFFFFD700).withOpacity(0.15)
+        ..color = const Color(0xFFFFD700).withValues(alpha: 0.15)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8));
     }
   }
@@ -222,7 +222,7 @@ class MapaHexPainter extends CustomPainter {
       ..shader = ui.Gradient.linear(
         origen,
         destino,
-        [color.withOpacity(0.0), color.withOpacity(0.5)],
+        [color.withValues(alpha: 0.0), color.withValues(alpha: 0.5)],
       )
       ..strokeWidth = 4.0
       ..strokeCap = StrokeCap.round;
@@ -231,7 +231,7 @@ class MapaHexPainter extends CustomPainter {
 
     // Partículas de luz sutiles
     final glowPaint = Paint()
-      ..color = color.withOpacity(0.2)
+      ..color = color.withValues(alpha: 0.2)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
     canvas.drawLine(origen, destino, glowPaint);
   }
@@ -245,13 +245,13 @@ class MapaHexPainter extends CustomPainter {
     final paintOnda = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0 * (1.0 - progreso)
-      ..color = color.withOpacity(opacidad);
+      ..color = color.withValues(alpha: opacidad);
 
     canvas.drawCircle(posicion, radioActual, paintOnda);
     
     // Brillo central de impacto
     canvas.drawCircle(posicion, radioActual * 0.5, Paint()
-      ..color = color.withOpacity(opacidad * 0.3)
+      ..color = color.withValues(alpha: opacidad * 0.3)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 15));
   }
 
@@ -261,11 +261,11 @@ class MapaHexPainter extends CustomPainter {
     const Color colorCian = Color(0xFF00E5FF);
     
     final paintArrow = Paint()
-      ..color = colorCian.withOpacity(0.7)
+      ..color = colorCian.withValues(alpha: 0.7)
       ..style = PaintingStyle.fill;
       
     final paintGlow = Paint()
-      ..color = colorCian.withOpacity(0.3)
+      ..color = colorCian.withValues(alpha: 0.3)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
 
     for (int i = 0; i < 6; i++) {
@@ -321,7 +321,7 @@ class MapaHexPainter extends CustomPainter {
 
     // 1. Sombra Proyectada (Ground Shadow) — Da sensación de despegarse del suelo
     final paintSombra = Paint()
-      ..color = Colors.black.withOpacity(elevado ? 0.2 : 0.6)
+      ..color = Colors.black.withValues(alpha: elevado ? 0.2 : 0.6)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, elevado ? 12 : 4);
     canvas.drawOval(
       Rect.fromCenter(center: posicion + Offset(elevado ? 10 : 4, elevado ? 10 : 4), width: radioBase * 1.2, height: radioBase * 0.4),
@@ -330,7 +330,7 @@ class MapaHexPainter extends CustomPainter {
 
     // 2. Brillo de Contorno (Rim Light / Light Wrap) — Separa la miniatura del fondo
     final paintRim = Paint()
-      ..color = heroe.color.withOpacity(0.3)
+      ..color = heroe.color.withValues(alpha: 0.3)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
     canvas.drawCircle(centroFigura, radioBase * 0.75, paintRim);
 
@@ -354,12 +354,12 @@ class MapaHexPainter extends CustomPainter {
       ..quadraticBezierTo(centroFigura.dx, centroFigura.dy - size * 0.35, centroFigura.dx - size * 0.15, centroFigura.dy - size * 0.3)
       ..close();
     
-    canvas.drawPath(glossPath, Paint()..color = Colors.white.withOpacity(0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
+    canvas.drawPath(glossPath, Paint()..color = Colors.white.withValues(alpha: 0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
 
     // 5. Aura de poder si está elevado
     if (elevado) {
       canvas.drawCircle(centroFigura, radioBase * 0.6, Paint()
-        ..color = heroe.color.withOpacity(0.2)
+        ..color = heroe.color.withValues(alpha: 0.2)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20));
     }
   }
@@ -372,7 +372,7 @@ class MapaHexPainter extends CustomPainter {
 
     // 1. Sombra de contacto (Drip Shadow) — Ancla la figura al pedestal
     final paintContactSombra = Paint()
-      ..color = Colors.black.withOpacity(0.8)
+      ..color = Colors.black.withValues(alpha: 0.8)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
     canvas.drawOval(Rect.fromCenter(center: posicion, width: radioBase * 0.8, height: radioBase * 0.3), paintContactSombra);
 
@@ -396,7 +396,7 @@ class MapaHexPainter extends CustomPainter {
 
     // 4. Capa de Biselado (Rim Light / Perfilado de Plástico)
     final paintRim = Paint()
-      ..color = Colors.white.withOpacity(0.5)
+      ..color = Colors.white.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 0.5);
@@ -412,7 +412,7 @@ class MapaHexPainter extends CustomPainter {
     // 6. Aura espectral (si está elevado)
     if (elevado) {
       canvas.drawPath(pathCuerpo, Paint()
-        ..color = color.withOpacity(0.2)
+        ..color = color.withValues(alpha: 0.2)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12));
     }
   }
@@ -507,7 +507,7 @@ class MapaHexPainter extends CustomPainter {
       centro,
       radioCirculo,
       Paint()
-        ..color = Colors.black.withOpacity(0.35) 
+        ..color = Colors.black.withValues(alpha: 0.35) 
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2),
     );
     
@@ -515,7 +515,7 @@ class MapaHexPainter extends CustomPainter {
       centro,
       radioCirculo,
       Paint()
-        ..color = colorPrincipal.withOpacity(0.15)
+        ..color = colorPrincipal.withValues(alpha: 0.15)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.0,
     );
@@ -535,9 +535,9 @@ class MapaHexPainter extends CustomPainter {
     final vertices = calcularVertices(centro);
     final path = Path()..addPolygon(vertices, true);
 
-    canvas.drawPath(path, Paint()..color = const Color(0xFF00E5FF).withOpacity(0.1));
-    canvas.drawPath(path, Paint()..color = const Color(0xFF00E5FF).withOpacity(0.5)..style = PaintingStyle.stroke..strokeWidth = 2.0);
-    _dibujarTexto(canvas, centro, '+', tamanoHex * 0.5, color: const Color(0xFF00E5FF).withOpacity(0.8));
+    canvas.drawPath(path, Paint()..color = const Color(0xFF00E5FF).withValues(alpha: 0.1));
+    canvas.drawPath(path, Paint()..color = const Color(0xFF00E5FF).withValues(alpha: 0.5)..style = PaintingStyle.stroke..strokeWidth = 2.0);
+    _dibujarTexto(canvas, centro, '+', tamanoHex * 0.5, color: const Color(0xFF00E5FF).withValues(alpha: 0.8));
   }
 
   void _dibujarTexto(Canvas canvas, Offset posicion, String texto, double fontSize, {

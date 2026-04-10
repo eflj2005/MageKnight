@@ -41,12 +41,12 @@ class WidgetCarta extends StatelessWidget {
         color: const Color(0xFF1E1E2C),
         borderRadius: BorderRadius.circular(compacta ? 6 : 12),
         border: Border.all(
-          color: acentoCard.withOpacity(compacta ? 0.3 : 0.8),
+          color: acentoCard.withValues(alpha: compacta ? 0.3 : 0.8),
           width: compacta ? 0.6 : 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: compacta ? 4 : 12,
             offset: Offset(0, compacta ? 1 : 1),
           ),
@@ -135,8 +135,8 @@ class WidgetCarta extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
       decoration: BoxDecoration(
-        color: acentoCard.withOpacity(0.15),
-        border: Border(bottom: BorderSide(color: acentoCard.withOpacity(0.3))),
+        color: acentoCard.withValues(alpha: 0.15),
+        border: Border(bottom: BorderSide(color: acentoCard.withValues(alpha: 0.3))),
       ),
       child: Text(
         carta.nombre,
@@ -160,7 +160,7 @@ class WidgetCarta extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: acentoCard.withOpacity(0.1)),
+        border: Border.all(color: acentoCard.withValues(alpha: 0.1)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
@@ -174,7 +174,7 @@ class WidgetCarta extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    acentoCard.withOpacity(0.2),
+                    acentoCard.withValues(alpha: 0.2),
                     Colors.transparent,
                   ],
                 ),
@@ -190,7 +190,7 @@ class WidgetCarta extends StatelessWidget {
                   return Center(
                     child: Icon(
                       Icons.image_outlined,
-                      color: acentoCard.withOpacity(0.2),
+                      color: acentoCard.withValues(alpha: 0.2),
                       size: 32,
                     ),
                   );
@@ -200,7 +200,7 @@ class WidgetCarta extends StatelessWidget {
               Center(
                 child: Icon(
                   Icons.auto_awesome_motion,
-                  color: acentoCard.withOpacity(0.15),
+                  color: acentoCard.withValues(alpha: 0.15),
                   size: 24,
                 ),
               ),
@@ -244,7 +244,7 @@ class WidgetCarta extends StatelessWidget {
             carta.textoPotenciado,
             textAlign: TextAlign.center,
             style: GoogleFonts.marcellus(
-              color: acentoCard.withOpacity(0.9),
+              color: acentoCard.withValues(alpha: 0.9),
               fontSize: 11,
               fontWeight: FontWeight.bold,
               height: 1.1
@@ -260,12 +260,12 @@ class WidgetCarta extends StatelessWidget {
   Widget _buildSeparator(Color acentoCard) {
     return Row(
       children: [
-        Expanded(child: Divider(color: acentoCard.withOpacity(0.2), thickness: 0.5)),
+        Expanded(child: Divider(color: acentoCard.withValues(alpha: 0.2), thickness: 0.5)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(_getManaEmoji(carta.colorBase), style: const TextStyle(fontSize: 10)),
         ),
-        Expanded(child: Divider(color: acentoCard.withOpacity(0.2), thickness: 0.5)),
+        Expanded(child: Divider(color: acentoCard.withValues(alpha: 0.2), thickness: 0.5)),
       ],
     );
   }
@@ -273,7 +273,7 @@ class WidgetCarta extends StatelessWidget {
   Widget _buildFooter() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       child: Text(
         carta.tipo.name.toUpperCase(),
         textAlign: TextAlign.center,

@@ -249,10 +249,10 @@ class _PantallaJuegoState extends State<PantallaJuego> {
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: AlertDialog(
-          backgroundColor: AppColors.fondoPanel.withOpacity(0.9),
+          backgroundColor: AppColors.fondoPanel.withValues(alpha: 0.9),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: BorderSide(color: AppColors.dorado.withOpacity(0.5)),
+            side: BorderSide(color: AppColors.dorado.withValues(alpha: 0.5)),
           ),
           title: Text(
             titulo,
@@ -275,7 +275,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.dorado.withOpacity(0.2),
+                backgroundColor: AppColors.dorado.withValues(alpha: 0.2),
                 foregroundColor: AppColors.dorado,
                 side: const BorderSide(color: AppColors.dorado),
               ),
@@ -306,9 +306,9 @@ class _PantallaJuegoState extends State<PantallaJuego> {
             width: MediaQuery.of(context).size.width * 0.6,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.fondoPanel.withOpacity(0.9), // [Fase 4F.7] Consistente con confirmación
+              color: AppColors.fondoPanel.withValues(alpha: 0.9), // [Fase 4F.7] Consistente con confirmación
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.dorado.withOpacity(0.3)), // [Fase 4F.7] Dorado
+              border: Border.all(color: AppColors.dorado.withValues(alpha: 0.3)), // [Fase 4F.7] Dorado
               boxShadow: [
                 BoxShadow(color: Colors.black54, blurRadius: 20, spreadRadius: 5),
               ],
@@ -341,7 +341,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                     child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: _mapa.heroe!.color,
-                        side: BorderSide(color: _mapa.heroe!.color.withOpacity(0.5)),
+                        side: BorderSide(color: _mapa.heroe!.color.withValues(alpha: 0.5)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
@@ -363,9 +363,9 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.dorado.withOpacity(0.1),
+                      backgroundColor: AppColors.dorado.withValues(alpha: 0.1),
                       foregroundColor: AppColors.dorado,
-                      side: BorderSide(color: AppColors.dorado.withOpacity(0.5)),
+                      side: BorderSide(color: AppColors.dorado.withValues(alpha: 0.5)),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     onPressed: () {
@@ -400,7 +400,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                   child: Text(
                     'VOLVER AL JUEGO',
                     style: GoogleFonts.marcellus(
-                      color: AppColors.dorado.withOpacity(0.6), // [Fase 4F.7] Dorado translúcido
+                      color: AppColors.dorado.withValues(alpha: 0.6), // [Fase 4F.7] Dorado translúcido
                       fontSize: 10,
                     ),
                   ),
@@ -485,20 +485,18 @@ class _PantallaJuegoState extends State<PantallaJuego> {
               child: _panelEstrategico(),
             ),
 
-          // Panel de información del hex seleccionado
+          // Panel de información del hex seleccionado (Relocalizado al espacio del Historial)
           if (_mostrarInfo && _hexSeleccionado != null)
             Positioned(
-              left: 0,
-              right: 0,
-              bottom: 60, // [Fase 5A] Elevado para dar espacio a la mano 
+              top: 70, 
+              right: 16,
               child: _construirPanelInfo(_hexSeleccionado!),
             ),
 
           // Botón de Recentrar (Ajuste de Vista) — Estética Premium
-          // movido antes del WidgetMano para que quede detrás del modal estratégico
           Positioned(
             right: 16,
-            bottom: _mostrarInfo ? 230 : 16,
+            bottom: (_mostrarInfo || _mostrarHistorial) ? 230 : 16,
             child: _construirBotonRecentrar(),
           ),
 
@@ -546,15 +544,15 @@ class _PantallaJuegoState extends State<PantallaJuego> {
         width: 56,
         height: 56,
         decoration: BoxDecoration(
-          color: const Color(0xFF1B2838).withOpacity(0.9),
+          color: const Color(0xFF1B2838).withValues(alpha: 0.9),
           shape: BoxShape.circle,
           border: Border.all(
-            color: const Color(0xFFFFD700).withOpacity(0.6),
+            color: const Color(0xFFFFD700).withValues(alpha: 0.6),
             width: 2,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFFD700).withOpacity(0.3),
+              color: const Color(0xFFFFD700).withValues(alpha: 0.3),
               blurRadius: 10,
               spreadRadius: 2,
             ),
@@ -576,15 +574,15 @@ class _PantallaJuegoState extends State<PantallaJuego> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFF1B2838).withOpacity(0.95),
+          color: const Color(0xFF1B2838).withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: const Color(0xFFFFD700).withOpacity(0.5),
+            color: const Color(0xFFFFD700).withValues(alpha: 0.5),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFFFD700).withOpacity(0.2),
+              color: const Color(0xFFFFD700).withValues(alpha: 0.2),
               blurRadius: 12,
               spreadRadius: 2,
             ),
@@ -749,155 +747,154 @@ class _PantallaJuegoState extends State<PantallaJuego> {
     );
   }
 
-  /// Construye el panel de información del hex seleccionado de forma compacta.
+  /// Construye el panel de información del hex seleccionado con estilo Glassmorphism vertical compacto.
   Widget _construirPanelInfo(Hexagono hex) {
-    return Container(
-      // [Ajuste UX] Reducción de padding superior para menor altura total
-      padding: const EdgeInsets.fromLTRB(20, 14, 16, 24),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1B0035),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(color: Color(0x88000000), blurRadius: 16, spreadRadius: 4),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: 190,
+          height: MediaQuery.of(context).size.height * 0.8, // [Fase 5F] Tamaño fijo igualado al Historial
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.fondoPanel.withValues(alpha: 0.9), // [Fase 5F] Reversión a mayor opacidad
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppColors.dorado.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max, // [Fase 5F] Ocupar todo el alto fijo
             children: [
-              // Íconos simultáneos
-              Text(
-                hex.iconoSitioStr != null
-                    ? '${hex.iconoTerrenoStr} ${hex.iconoSitioStr}'
-                    : hex.iconoTerrenoStr,
-                style: const TextStyle(fontSize: 34),
+              // ── Cabecera Compacta ─────────────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'DETALLES',
+                    style: GoogleFonts.marcellus(
+                      color: AppColors.dorado,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white24, size: 14),
+                    onPressed: () => setState(() => _mostrarInfo = false),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                  ),
+                ],
               ),
-              const SizedBox(width: 14),
+              const Divider(color: Colors.white10, height: 4), // [Fase 5F] Reducido de 12
 
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (hex.sitio == TipoSitio.minasCristal &&
-                        hex.colorMana != null)
-                      RichText(
-                        text: TextSpan(
+              // ── Contenido con Scroll si es necesario ──────────────────────
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // ── Icono y Título ──────────────────────────────────
+                      Center(
+                        child: Text(
+                          hex.iconoSitioStr != null
+                              ? '${hex.iconoTerrenoStr} ${hex.iconoSitioStr}'
+                              : hex.iconoTerrenoStr,
+                          style: const TextStyle(fontSize: 32),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        hex.sitio != null
+                            ? stringSitio(hex.sitio!).toUpperCase()
+                            : _nombreTerreno(hex.tipo).toUpperCase(),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.cinzel(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (hex.sitio != null)
+                        Text(
+                          _nombreTerreno(hex.tipo),
                           style: GoogleFonts.cinzel(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            color: AppColors.dorado,
+                            fontSize: 9,
                           ),
+                        ),
+                      
+                      const SizedBox(height: 12),
+
+                      // ── Costo de Movimiento ──────────────────────────────
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: hex.esTransitable
+                              ? const Color(0xFF4A148C).withValues(alpha: 0.3)
+                              : const Color(0xFF7B0000).withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: hex.esTransitable
+                                ? const Color(0xFF4A148C)
+                                : const Color(0xFF7B0000),
+                          ),
+                        ),
+                        child: Column(
                           children: [
-                            const TextSpan(text: 'MINAS DE CRISTAL '),
-                            TextSpan(
-                              text: obtenerNombreColorMana(hex.colorMana!),
-                              style: TextStyle(
-                                color: obtenerColorMana(hex.colorMana!),
-                                decoration: TextDecoration.underline,
-                                decorationColor: obtenerColorMana(
-                                  hex.colorMana!,
-                                ),
-                                decorationThickness: 2,
+                            Text(
+                              hex.esTransitable ? '${hex.costo}' : '∞',
+                              style: GoogleFonts.cinzel(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'MOVIMIENTO',
+                              style: GoogleFonts.cinzel(
+                                color: Colors.white60,
+                                fontSize: 7,
+                                letterSpacing: 1,
                               ),
                             ),
                           ],
                         ),
-                      )
-                    else
-                      Text(
-                        hex.sitio != null
-                            ? stringSitio(hex.sitio!)
-                            : _nombreTerreno(hex.tipo),
-                        style: GoogleFonts.cinzel(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
                       ),
-                    if (hex.sitio != null)
+
+                      const SizedBox(height: 12),
+
+                      // ── Coordenadas y Clase ──────────────────────────────
                       Text(
-                        'Base: ${_nombreTerreno(hex.tipo)}',
-                        style: GoogleFonts.cinzel(
-                          color: const Color(0xFFFFD700),
+                        'Pos: (${hex.q}, ${hex.r})',
+                        style: GoogleFonts.marcellus(color: Colors.white38, fontSize: 10),
+                      ),
+                      Text(
+                        _descripTipoLoseta(hex.tipoLoseta),
+                        style: GoogleFonts.marcellus(color: Colors.white38, fontSize: 9),
+                      ),
+
+                      const SizedBox(height: 10),
+                      
+                      // ── Descripción ─────────────────────────────────────
+                      Text(
+                        _descripcionTerreno(hex.tipo),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.marcellus(
+                          color: Colors.white70,
                           fontSize: 11,
+                          fontStyle: FontStyle.italic,
                         ),
-                      )
-                    else
-                      const SizedBox(height: 2),
-                    Text(
-                      'Coord: (${hex.q}, ${hex.r}) | Loseta #${hex.idLoseta} | ${_descripTipoLoseta(hex.tipoLoseta)}',
-                      style: GoogleFonts.cinzel(
-                        color: Colors.white54,
-                        fontSize: 13,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Indicador de costo de movimiento
-              Container(
-                margin: const EdgeInsets.only(right: 12),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: hex.esTransitable
-                      ? const Color(0xFF4A148C)
-                      : const Color(0xFF7B0000),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      hex.esTransitable ? '${hex.costo}' : '∞',
-                      style: GoogleFonts.cinzel(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'MOV',
-                      style: GoogleFonts.cinzel(
-                        color: Colors.white60,
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Botón (X) integrado naturalmente en la fila
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white54,
-                    size: 24,
+                    ],
                   ),
-                  onPressed: () => setState(() => _mostrarInfo = false),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  splashRadius: 20,
                 ),
               ),
             ],
           ),
-
-          const SizedBox(height: 8),
-
-          // Descripción del terreno
-          Text(
-            _descripcionTerreno(hex.tipo),
-            style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 14),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -953,9 +950,9 @@ class _PantallaJuegoState extends State<PantallaJuego> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: colorBase.withOpacity(0.2),
+            color: colorBase.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: colorBase.withOpacity(0.5)),
+            border: Border.all(color: colorBase.withValues(alpha: 0.5)),
           ),
           child: Text(
             valor.toString(),

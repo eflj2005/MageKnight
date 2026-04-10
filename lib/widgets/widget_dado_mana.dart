@@ -5,8 +5,7 @@ class WidgetDadoMana extends StatelessWidget {
   final DadoMana dado;
   final VoidCallback? onTap;
 
-  const WidgetDadoMana({Key? key, required this.dado, this.onTap})
-    : super(key: key);
+  const WidgetDadoMana({super.key, required this.dado, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class WidgetDadoMana extends StatelessWidget {
     // [Refinado v3.0.1] Ya no se "apaga" el dado al seleccionarlo.
     // Solo se desatura si es incompatible con el ciclo.
     final Color colorFondo = dado.esIncompatible
-        ? colorActivo.withOpacity(0.4)
+        ? colorActivo.withValues(alpha: 0.4)
         : colorActivo;
 
     return GestureDetector(
@@ -25,7 +24,9 @@ class WidgetDadoMana extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         width: 36, // [Fase 4F.6] Reducido de 40
         height: 36, // [Fase 4F.6] Reducido de 40
-        margin: const EdgeInsets.symmetric(horizontal: 4.0), // [Fase 4F.6] Reducido de 5.0
+        margin: const EdgeInsets.symmetric(
+          horizontal: 4.0,
+        ), // [Fase 4F.6] Reducido de 5.0
         decoration: BoxDecoration(
           color: colorFondo,
           borderRadius: BorderRadius.circular(10.0),
@@ -34,11 +35,11 @@ class WidgetDadoMana extends StatelessWidget {
               : [
                   BoxShadow(
                     color: dado.estaAgotado
-                        ? Colors.pinkAccent.withOpacity(
-                            0.9,
-                          ) // Casi opaco para mayor impacto
-                        : colorActivo.withOpacity(0.5),
-                    blurRadius: dado.estaAgotado ? 14 : 8, // [Refinado v3.0.6] Aura más discreta y profesional
+                        ? Colors.pinkAccent.withValues(alpha: 0.9) // Casi opaco para mayor impacto
+                        : colorActivo.withValues(alpha: 0.5),
+                    blurRadius: dado.estaAgotado
+                        ? 14
+                        : 8, // [Refinado v3.0.6] Aura más discreta y profesional
                     spreadRadius: dado.estaAgotado ? 4 : 1,
                   ),
                 ],

@@ -32,8 +32,8 @@ class WidgetFuenteMana extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0), // [Fase 4F.6] Reducido
               decoration: BoxDecoration(
                 color: fuente.estaRodando 
-                    ? Colors.white.withOpacity(0.1) 
-                    : Colors.black.withOpacity(0.5),
+                    ? Colors.white.withValues(alpha: 0.1) 
+                    : Colors.black.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(16.0),
                 border: Border.all(
                   color: fuente.estaRodando ? Colors.white70 : Colors.white24, 

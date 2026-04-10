@@ -143,6 +143,43 @@ class ComandoFinTurno implements ComandoJuego {
   }
 }
 
+// --------------------------------------------------------------------------
+
+/// Comando: Revelación de nueva loseta de terreno.
+///
+/// Registra la loseta obtenida para poder devolverla al mazo en el des-hacer.
+class ComandoExpandirMapa implements ComandoJuego {
+  final Loseta loseta;
+  final int q, r;
+  final int pmGastados;
+
+  @override
+  final int turno;
+
+  const ComandoExpandirMapa({
+    required this.loseta,
+    required this.q,
+    required this.r,
+    required this.pmGastados,
+    required this.turno,
+  });
+
+  @override
+  String get descripcion => 'Explorar: +1 Loseta [-$pmGastados P(m)]';
+
+  @override
+  void deshacer(SesionJuego sesion) {
+    sesion.mapa.revertirExpansion(loseta, q, r);
+    sesion.mapa.heroe?.recargarMovimiento(pmGastados);
+  }
+
+  @override
+  void reejecutar(SesionJuego sesion) {
+    sesion.mapa.expandirEn(q, r);
+    sesion.mapa.heroe?.consumirMovimiento(pmGastados);
+  }
+}
+
 // =============================================================================
 // SESIÓN DE JUEGO — Estado Unificado
 // =============================================================================
@@ -190,11 +227,14 @@ class SesionJuego extends ChangeNotifier {
   /// Stack de comandos deshechados (para rehacer)
   final List<ComandoJuego> _rehacibles = [];
 
-  /// [Fase 4B] Turno cronológico de la sesión
+  /// Turno cronológico de la sesión
   int _turnoActual = 1;
   int get turnoActual => _turnoActual;
 
-  /// [Fase 4B] Límite de acciones visibles en el historial
+  /// Costos estándar de acciones tácticas
+  static const int COSTO_EXPLORACION = 2;
+
+  /// Límite de acciones visibles en el historial
   static const int _limiteHistorial = 30;
 
   /// Permite deshacer SOLO si hay historial Y la última acción pertenece al turno actual
@@ -275,12 +315,29 @@ class SesionJuego extends ChangeNotifier {
 
   /// Expande el mapa colocando la siguiente loseta en (q, r).
   ///
-  /// NOTA: La expansión NO es deshacible (igual que en el juego físico).
+  /// Requiere PM suficientes y adyacencia del héroe.
   bool expandirMapa(int q, int r) {
-    if (!_mapa.expandirEn(q, r)) return false;
-    // Limpiar el historial al revelar territorio (acción irreversible)
-    // Comentar la siguiente línea si se prefiere mantener el historial previo
-    // _historial.clear();
+    final heroe = _mapa.heroe;
+    if (heroe == null) return false;
+
+    // 1. Validar PM suficientes
+    if (heroe.puntosMovimiento < SesionJuego.COSTO_EXPLORACION) return false;
+
+    // 2. Ejecutar la expansión (la validación de adyacencia ocurre dentro de MapaJuego)
+    final losetaRevelada = _mapa.expandirEn(q, r);
+    if (losetaRevelada == null) return false;
+
+    // 3. Consumir PM y registrar comando
+    heroe.consumirMovimiento(SesionJuego.COSTO_EXPLORACION);
+    final cmd = ComandoExpandirMapa(
+      loseta: losetaRevelada,
+      q: q,
+      r: r,
+      pmGastados: SesionJuego.COSTO_EXPLORACION,
+      turno: _turnoActual,
+    );
+    _registrarComando(cmd);
+
     notifyListeners();
     return true;
   }

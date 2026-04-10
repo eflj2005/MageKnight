@@ -578,22 +578,86 @@ CONVENCIONES DE ESTADO:
                                Escala 2.8, Curva Suave, Altura 600px).
 
 ================================================================================
-  FASE 5D — LÓGICA DE JUEGO Y RECURSOS          [PLANIFICADA]
+  FASE 5M — VISOR UNIFICADO CON TRANSICIóN HERO       [COMPLETADA] 2026-04-10
 ================================================================================
 
-  - [RECURSOS] Integración en Panel Estratégico: Maná (Normal/Cristal) e 
-               inventario de Cristales.
-  - [FUENTE  ] Visualización y uso de dados de la Fuente de Magia.
-  - [HÉROE   ] Habilidades únicas y fichas de habilidad en el panel.
-  - [UNIDADES] Sección de Unidades aliadas y su gestión en el área de trabajo.
-  - [COMBATE ] Resolución de efectos de cartas, Atq/Blq y daño.
+  - [MOTOR ]   2026-04-10 — Migración a TickerProviderStateMixin: soporte
+                               para dos AnimationControllers simultáneos.
+  - [MOTOR ]   2026-04-10 — AnimationController _transicionController: fade
+                               del fondo negro (320ms, easeOut/easeIn).
+  - [UI/UX ]   2026-04-10 — Transición Hero por carta: cada miniatura tiene
+                               tag único 'carta_hero_{id}' sincronizado con
+                               su espejo en el carrusel de zoom.
+  - [UI/UX ]   2026-04-10 — flightShuttleBuilder personalizado: usa Material
+                               transparente para evitar fondos blancos del motor.
+  - [LOGICA]   2026-04-10 — Carrusel Lineal: eliminada la aritmética modular
+                               (bucle infinito). El carrusel refleja exactamente
+                               las cartas de la mano (primera a última).
+  - [LOGICA]   2026-04-10 — Límites del arrastre: clampeo a [0, total-1] con
+                               resistencia sutil de 0.3 en los bordes.
+  - [ESTAB ]   2026-04-10 — Abanico siempre en árbol (Opacity 0/1): garantiza
+                               que el Hero tenga widget origen válido al cerrar.
+  - [UI/UX ]   2026-04-10 — Refinamiento Táctico v2 (Agrandado Heroico): Escala 
+                               aumentada a 3.2, Fondo al 82% de opacidad, Halo
+                               al 6% y cinemáticas suavizadas (EaseCubic/Quart).
+  - [UI/UX ]   2026-04-10 — Refinamiento Táctico v3 (Minimalismo): Eliminación
+                               de botón 'X', Fondo al 55% de opacidad para 
+                               máxima visibilidad del mapa.
+  - [MOTOR ]   2026-04-10 — Optimización de Latencia: Eliminado 'await' en el
+                               cierre para disparar el vuelo Hero y el fade-out
+                               de forma instantánea y simultánea.
+  - [UI/UX ]   2026-04-10 — Fase 5M.4: Hundimiento Táctico Extremo (-75px) en el
+                               abanico inferior y ajuste de arco (dy * 20.0).
+                               Asegura que las cartas se "salgan" visualmente
+                               del marco del dispositivo.
+
 
 ================================================================================
-  FASE 6 — CONQUISTA DE SITIOS                  [PLANIFICADA — NO INICIADA]
+  FASE 5E — REGLAS DE EXPLORACIÓN Y REFINAMIENTO      [COMPLETADA] 2026-04-10
 ================================================================================
 
-  Incluira: Backend con API REST / WebSockets, multiples heroes simultaneos,
-            sesiones de partida en linea.
+  - [UI/UX ]   2026-04-10 — Refinamiento del Pergamino: Ancho reducido a 190px
+                               para liberar área de visión táctica periférica.
+  - [REGLAS]   2026-04-10 — Exploración con Costo: Descubrir losetas ahora 
+                               consume 2 P(m) y requiere adyacencia del héroe.
+  - [MOTOR ]   2026-04-10 — ComandoExpandirMapa: Implementación del patrón
+                               Command para permitir deshacer/rehacer el 
+                               descubrimiento de territorio.
+  - [ESTAB ]   2026-04-10 — Gestión de Mazo Reversible: MapaJuego ahora
+                               permite re-insertar losetas al des-hacer.
+
+
+================================================================================
+  FASE 5F — UNIFICACIÓN DE INTERFAZ LATERAL           [COMPLETADA] 2026-04-10
+================================================================================
+
+  - [UI/UX ]   2026-04-10 — Rediseño Vertical: El panel de información de celdas
+                               ahora es una columna de 190px de ancho.
+  - [UI/UX ]   2026-04-10 — Reubicación Estratégica: El panel se ha movido de la
+                               parte inferior a la esquina superior derecha.
+  - [UI/UX ]   2026-04-10 — Glassmorphism: Aplicación de desenfoque de fondo y
+                               estilo visual idéntico al Pergamino de Memoria.
+  - [UI/UX ]   2026-04-10 — Refinamiento 5F.2: Panel compactado (65% altura max),
+                               título "DETALLES" y scroll flexible.
+  - [UI/UX ]   2026-04-10 — Sincronización: Botón de recentrado ahora sube
+                               cuando el historial o detalles están abiertos.
+
+
+================================================================================
+  MIGRACIÓN GLOBAL — ESTÁNDARES FLUTTER 3.24+         [COMPLETADA] 2026-04-10
+================================================================================
+
+  - [TÉCNICO] 2026-04-10 — Migración masiva de `.withOpacity(x)` a 
+                               `.withValues(alpha: x)` en todo el proyecto.
+  - [TÉCNICO] 2026-04-10 — Actualización de transformaciones `Matrix4`:
+                               `.scale(s)` -> `.scaleByDouble(s)` en 
+                               widget_mano.dart y mapa_hex_painter.dart.
+  - [ESTAB  ] 2026-04-10 — Eliminación de advertencias `deprecated_member_use`.
+  - [ARCHIV ] Archivos migrados:
+                               `pantalla_juego.dart`, `mapa_hex_painter.dart`,
+                               `widget_strategic_panel.dart`, `widget_mano.dart`,
+                               `widget_historial.dart`, `widget_fuente_mana.dart`,
+                               `widget_dado_mana.dart`, `widget_carta.dart`.
 
 ================================================================================
 

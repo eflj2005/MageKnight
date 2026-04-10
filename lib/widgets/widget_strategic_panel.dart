@@ -84,7 +84,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
               onTap: widget.onClose,
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                child: Container(color: Colors.black.withOpacity(0.6)),
+                child: Container(color: Colors.black.withValues(alpha: 0.6)),
               ),
             ),
 
@@ -110,12 +110,12 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
                     color: const Color(0xFF161621),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: const Color(0xFFFFD700).withOpacity(0.3), 
+                      color: const Color(0xFFFFD700).withValues(alpha: 0.3), 
                       width: 2
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.8), 
+                        color: Colors.black.withValues(alpha: 0.8), 
                         blurRadius: 30, 
                         spreadRadius: 5
                       )
@@ -232,7 +232,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
         ),
 
         // Separador vertical
-        Container(width: 1, color: Colors.white.withOpacity(0.1)),
+        Container(width: 1, color: Colors.white.withValues(alpha: 0.1)),
 
         // Columna Derecha (Visor Zoom)
         _buildZoomPanel(),
@@ -244,7 +244,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
     return Container(
       height: 125,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withValues(alpha: 0.2),
         border: const Border(bottom: BorderSide(color: Colors.white10)),
       ),
       child: ListView.builder(
@@ -278,7 +278,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: esSeleccionada ? [
                       BoxShadow(
-                        color: const Color(0xFFFFD700).withOpacity(0.4),
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.4),
                         blurRadius: 10,
                         spreadRadius: 2
                       )
@@ -324,7 +324,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
             border: Border.all(
               color: candidateData.isNotEmpty 
                 ? const Color(0xFFFFD700) 
-                : Colors.white.withOpacity(0.05),
+                : Colors.white.withValues(alpha: 0.05),
               width: 1,
             ),
           ),
@@ -385,7 +385,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: esSeleccionada ? [
                     BoxShadow(
-                      color: const Color(0xFFFFD700).withOpacity(0.4),
+                      color: const Color(0xFFFFD700).withValues(alpha: 0.4),
                       blurRadius: 12,
                       spreadRadius: 3
                     )
@@ -404,7 +404,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
     return Expanded(
       flex: 1,
       child: Container(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -427,7 +427,7 @@ class _WidgetStrategicPanelState extends State<WidgetStrategicPanel> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.zoom_in, color: Colors.white.withOpacity(0.05), size: 64),
+        Icon(Icons.zoom_in, color: Colors.white.withValues(alpha: 0.05), size: 64),
         const SizedBox(height: 12),
         Text(
           'Inspecionar...',
