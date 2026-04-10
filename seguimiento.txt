@@ -636,11 +636,12 @@ CONVENCIONES DE ESTADO:
   - [UI/UX ]   2026-04-10 — Reubicación Estratégica: El panel se ha movido de la
                                parte inferior a la esquina superior derecha.
   - [UI/UX ]   2026-04-10 — Glassmorphism: Aplicación de desenfoque de fondo y
-                               estilo visual idéntico al Pergamino de Memoria.
-  - [UI/UX ]   2026-04-10 — Refinamiento 5F.2: Panel compactado (65% altura max),
-                               título "DETALLES" y scroll flexible.
-  - [UI/UX ]   2026-04-10 — Sincronización: Botón de recentrado ahora sube
-                               cuando el historial o detalles están abiertos.
+                               estilo opaco (0.9) para máxima legibilidad.
+  - [UI/UX ]   2026-04-10 — Refinamiento 5F.2: Panel con altura fija (80% pantalla),
+                               título ultra-compacto y scroll interno.
+  - [UI/UX ]   2026-04-10 — Estabilidad de Layout: El botón de recentrar y el panel
+                               estratégico se mantienen fijos en la base (bottom) 
+                               sin importar la activación de paneles laterales.
 
 
 ================================================================================
@@ -658,6 +659,24 @@ CONVENCIONES DE ESTADO:
                                `widget_strategic_panel.dart`, `widget_mano.dart`,
                                `widget_historial.dart`, `widget_fuente_mana.dart`,
                                `widget_dado_mana.dart`, `widget_carta.dart`.
+
+================================================================================
+  FASE 5D — LÓGICA DE JUEGO Y RECURSOS          [PLANIFICADA]
+================================================================================
+
+  - [RECURSOS] Integración en Panel Estratégico: Maná (Normal/Cristal) e 
+               inventario de Cristales.
+  - [FUENTE  ] Visualización y uso de dados de la Fuente de Magia.
+  - [HÉROE   ] Habilidades únicas y fichas de habilidad en el panel.
+  - [UNIDADES] Sección de Unidades aliadas y su gestión en el área de trabajo.
+  - [COMBATE ] Resolución de efectos de cartas, Atq/Blq y daño.
+
+================================================================================
+  FASE 6 — CONQUISTA DE SITIOS                  [PLANIFICADA — NO INICIADA]
+================================================================================
+
+  Incluira: Backend con API REST / WebSockets, multiples heroes simultaneos,
+            sesiones de partida en linea.
 
 ================================================================================
 

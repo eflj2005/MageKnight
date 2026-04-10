@@ -31,7 +31,6 @@ class PantallaJuego extends StatefulWidget {
 }
 
 class _PantallaJuegoState extends State<PantallaJuego> {
-
   // ── [Fase 4] GameState Unificado ─────────────────────────────────────────
   /// SesionJuego agrupa MapaJuego + FuenteMagia + undo/redo en un solo objeto.
   late SesionJuego _sesion;
@@ -107,8 +106,12 @@ class _PantallaJuegoState extends State<PantallaJuego> {
       colorRastro: datos['colorRastro'] as Color,
       q: q,
       r: r,
-      puntosMovimiento: reglas.puntosMovimientoInicial(datos['nombre'] as String),
-      puntosInfluencia: reglas.puntosInfluenciaInicial(datos['nombre'] as String),
+      puntosMovimiento: reglas.puntosMovimientoInicial(
+        datos['nombre'] as String,
+      ),
+      puntosInfluencia: reglas.puntosInfluenciaInicial(
+        datos['nombre'] as String,
+      ),
       puntosAtaque: reglas.puntosAtaqueInicial(datos['nombre'] as String),
       puntosBloqueo: reglas.puntosBloqueoInicial(datos['nombre'] as String),
       puntosCuracion: reglas.puntosCuracionInicial(datos['nombre'] as String),
@@ -153,10 +156,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
     final escenario = CatalogoEscenarios.porDefecto;
     final heroeInicial = _crearHeroeDesdeCatalogo(_indiceHeroeActivo);
     _sesion = SesionJuego();
-    _sesion.inicializar(
-      escenario: escenario,
-      heroeInicial: heroeInicial,
-    );
+    _sesion.inicializar(escenario: escenario, heroeInicial: heroeInicial);
     _sesion.addListener(_alActualizarEstado);
   }
 
@@ -299,18 +299,29 @@ class _PantallaJuegoState extends State<PantallaJuego> {
     showDialog(
       context: context,
       builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // [Fase 4F.7] Igual que confirmación
+        filter: ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ), // [Fase 4F.7] Igual que confirmación
         child: Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
             width: MediaQuery.of(context).size.width * 0.6,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.fondoPanel.withValues(alpha: 0.9), // [Fase 4F.7] Consistente con confirmación
+              color: AppColors.fondoPanel.withValues(
+                alpha: 0.9,
+              ), // [Fase 4F.7] Consistente con confirmación
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.dorado.withValues(alpha: 0.3)), // [Fase 4F.7] Dorado
+              border: Border.all(
+                color: AppColors.dorado.withValues(alpha: 0.3),
+              ), // [Fase 4F.7] Dorado
               boxShadow: [
-                BoxShadow(color: Colors.black54, blurRadius: 20, spreadRadius: 5),
+                BoxShadow(
+                  color: Colors.black54,
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
               ],
             ),
             child: Column(
@@ -326,14 +337,13 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                   ),
                 ),
                 const SizedBox(height: 16), // [Fase 4F.1] Reducido
-                
                 // Conteo de losetas (Movido de la AppBar)
                 _buildInfoRow('Losetas Restantes', '${_mapa.losetasRestantes}'),
                 const SizedBox(height: 12),
                 _buildInfoRow('Turno Actual', '${_sesion.turnoActual}'),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Opción de Cambiar Héroe (Movido de la AppBar para mayor limpieza)
                 if (_mapa.heroe != null)
                   SizedBox(
@@ -341,7 +351,9 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                     child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: _mapa.heroe!.color,
-                        side: BorderSide(color: _mapa.heroe!.color.withValues(alpha: 0.5)),
+                        side: BorderSide(
+                          color: _mapa.heroe!.color.withValues(alpha: 0.5),
+                        ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
@@ -351,13 +363,15 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                       icon: const Icon(Icons.portrait),
                       label: Text(
                         'CAMBIAR HÉROE (${_mapa.heroe!.nombre})',
-                        style: GoogleFonts.marcellus(fontWeight: FontWeight.bold),
+                        style: GoogleFonts.marcellus(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
 
                 const SizedBox(height: 12),
-                
+
                 // Botón Reiniciar (Movido de la AppBar) - [Fase 4F.1] Color azul táctico
                 SizedBox(
                   width: double.infinity,
@@ -365,14 +379,17 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.dorado.withValues(alpha: 0.1),
                       foregroundColor: AppColors.dorado,
-                      side: BorderSide(color: AppColors.dorado.withValues(alpha: 0.5)),
+                      side: BorderSide(
+                        color: AppColors.dorado.withValues(alpha: 0.5),
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     onPressed: () {
                       Navigator.pop(context);
                       _mostrarDialogoConfirmacion(
                         titulo: 'REINICIAR PARTIDA',
-                        mensaje: '¿Estás seguro de que deseas perder todo tu progreso actual?',
+                        mensaje:
+                            '¿Estás seguro de que deseas perder todo tu progreso actual?',
                         onConfirmar: () {
                           _sesion.removeListener(_alActualizarEstado);
                           _sesion.dispose();
@@ -400,7 +417,9 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                   child: Text(
                     'VOLVER AL JUEGO',
                     style: GoogleFonts.marcellus(
-                      color: AppColors.dorado.withValues(alpha: 0.6), // [Fase 4F.7] Dorado translúcido
+                      color: AppColors.dorado.withValues(
+                        alpha: 0.6,
+                      ), // [Fase 4F.7] Dorado translúcido
                       fontSize: 10,
                     ),
                   ),
@@ -446,7 +465,8 @@ class _PantallaJuegoState extends State<PantallaJuego> {
             celdas: _mapa.celdas,
             heroe: _mapa.heroe,
             puedeMoverseA: (q, r) => _mapa.puedeMoverseA(q, r),
-            obtenerCostoRuta: (q1, r1, q2, r2) => _mapa.calcularCostoRuta(q1, r1, q2, r2),
+            obtenerCostoRuta: (q1, r1, q2, r2) =>
+                _mapa.calcularCostoRuta(q1, r1, q2, r2),
             posicionesFantasma: _mapa.posicionesFantasma,
             onHexSeleccionado: _alSeleccionarHex,
             onHeroeMovido: _alMoverHeroe,
@@ -461,18 +481,19 @@ class _PantallaJuegoState extends State<PantallaJuego> {
           // [Fase 2C] Panel de "La Fuente" (Opción B: Flotando arriba a la izquierda)
           if (_mostrarFuente)
             Positioned(
-              top: 70, 
+              top: 70,
               left: 16,
               child: WidgetFuenteMana(
                 fuente: _fuenteMagia,
-                onCicloTap: () => _sesion.cambiarCiclo(), // [Fase 4C] Inyectar motor de historial
+                onCicloTap: () => _sesion
+                    .cambiarCiclo(), // [Fase 4C] Inyectar motor de historial
               ),
             ),
 
           // [Fase 4B] Panel de "El Pergamino de Memoria" (Flotando a la derecha)
           if (_mostrarHistorial)
             Positioned(
-              top: 70, 
+              top: 70,
               right: 16,
               child: WidgetHistorial(sesion: _sesion),
             ),
@@ -481,14 +502,14 @@ class _PantallaJuegoState extends State<PantallaJuego> {
           if (_mostrarEstrategia)
             Positioned(
               left: 12,
-              bottom: _mostrarInfo ? 220 : 12,
+              bottom: 12, // [Fase 5F] Posición fija, ya no depende de _mostrarInfo
               child: _panelEstrategico(),
             ),
 
           // Panel de información del hex seleccionado (Relocalizado al espacio del Historial)
           if (_mostrarInfo && _hexSeleccionado != null)
             Positioned(
-              top: 70, 
+              top: 70,
               right: 16,
               child: _construirPanelInfo(_hexSeleccionado!),
             ),
@@ -496,7 +517,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
           // Botón de Recentrar (Ajuste de Vista) — Estética Premium
           Positioned(
             right: 16,
-            bottom: (_mostrarInfo || _mostrarHistorial) ? 230 : 16,
+            bottom: 16, // [Fase 5F] Posición fija, el panel de detalles ahora está arriba
             child: _construirBotonRecentrar(),
           ),
 
@@ -523,10 +544,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
         if (_proximoCentradoEsHeroe) {
           // Centrado en el Héroe [Fase 1M]
           final h = _mapa.heroe;
-          _mapaKey.currentState?.recentrarMapa(
-            targetQ: h?.q,
-            targetR: h?.r,
-          );
+          _mapaKey.currentState?.recentrarMapa(targetQ: h?.q, targetR: h?.r);
           _mostrarMensaje('Cámara centrada en el Héroe.');
         } else {
           // Centrado Global del Mapa [Fase 1L]
@@ -660,7 +678,8 @@ class _PantallaJuegoState extends State<PantallaJuego> {
               onPressed: () {
                 _mostrarDialogoConfirmacion(
                   titulo: 'FINALIZAR TURNO',
-                  mensaje: '¿Has completado todas tus acciones? No podrás deshacer una vez confirmado.',
+                  mensaje:
+                      '¿Has completado todas tus acciones? No podrás deshacer una vez confirmado.',
                   onConfirmar: () {
                     setState(() {
                       _sesion.finDeTurno(pmRecarga: 12);
@@ -679,10 +698,16 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                 children: [
                   // [Fase 2B] Botón Toggle del Panel Estratégico (Puntos)
                   IconButton(
-                    onPressed: () => setState(() => _mostrarEstrategia = !_mostrarEstrategia),
+                    onPressed: () => setState(
+                      () => _mostrarEstrategia = !_mostrarEstrategia,
+                    ),
                     icon: Icon(
-                      _mostrarEstrategia ? Icons.dashboard : Icons.dashboard_outlined,
-                      color: _mostrarEstrategia ? AppColors.dorado : Colors.white70,
+                      _mostrarEstrategia
+                          ? Icons.dashboard
+                          : Icons.dashboard_outlined,
+                      color: _mostrarEstrategia
+                          ? AppColors.dorado
+                          : Colors.white70,
                       size: 18,
                     ),
                     tooltip: 'Mostrar recursos estratégicos',
@@ -694,38 +719,50 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                     builder: (context, _) {
                       bool esDia = _fuenteMagia.cicloActual == CicloMundo.dia;
                       return IconButton(
-                        onPressed: () => setState(() => _mostrarFuente = !_mostrarFuente),
+                        onPressed: () =>
+                            setState(() => _mostrarFuente = !_mostrarFuente),
                         icon: Icon(
                           esDia ? Icons.wb_sunny : Icons.nights_stay,
-                          color: _mostrarFuente 
+                          color: _mostrarFuente
                               ? (esDia ? Colors.amber : Colors.blueGrey)
                               : Colors.white24,
                           size: 18,
                         ),
-                        tooltip: _mostrarFuente ? 'Ocultar La Fuente' : 'Mostrar La Fuente',
+                        tooltip: _mostrarFuente
+                            ? 'Ocultar La Fuente'
+                            : 'Mostrar La Fuente',
                       );
                     },
                   ),
-                  
+
                   // [Fase 2C] Botón Táctico: Re-Roll Manual (Lanzar Fuente)
                   IconButton(
                     onPressed: () {
                       _fuenteMagia.lanzarDados(rerollAgotados: true);
                       _mostrarMensaje('Los dados agotados se han relanzado.');
                     },
-                    icon: const Icon(Icons.casino, color: Colors.white70, size: 18),
+                    icon: const Icon(
+                      Icons.casino,
+                      color: Colors.white70,
+                      size: 18,
+                    ),
                     tooltip: 'Relanzar Dados Agotados',
                   ),
 
                   // [Fase 4B/4C] Botón Táctico: Historial
                   IconButton(
-                    onPressed: () => setState(() => _mostrarHistorial = !_mostrarHistorial),
+                    onPressed: () =>
+                        setState(() => _mostrarHistorial = !_mostrarHistorial),
                     icon: Icon(
                       Icons.history_edu,
-                      color: _mostrarHistorial ? AppColors.dorado : Colors.white70,
+                      color: _mostrarHistorial
+                          ? AppColors.dorado
+                          : Colors.white70,
                       size: 20,
                     ),
-                    tooltip: _mostrarHistorial ? 'Cerrar Pergamino' : 'Ver Pergamino de Memoria',
+                    tooltip: _mostrarHistorial
+                        ? 'Cerrar Pergamino'
+                        : 'Ver Pergamino de Memoria',
                   ),
 
                   // [Fase 4F] Botón de Información General
@@ -755,10 +792,12 @@ class _PantallaJuegoState extends State<PantallaJuego> {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: 190,
-          height: MediaQuery.of(context).size.height * 0.8, // [Fase 5F] Tamaño fijo igualado al Historial
+          height:
+              MediaQuery.of(context).size.height *
+              0.8, // [Fase 5F] Tamaño fijo igualado al Historial
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.fondoPanel.withValues(alpha: 0.9), // [Fase 5F] Reversión a mayor opacidad
+            color: Color(0xFF1B0035), // [Fase 5F] Reversión a mayor opacidad
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: AppColors.dorado.withValues(alpha: 0.3),
@@ -766,7 +805,8 @@ class _PantallaJuegoState extends State<PantallaJuego> {
             ),
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.max, // [Fase 5F] Ocupar todo el alto fijo
+            mainAxisSize:
+                MainAxisSize.max, // [Fase 5F] Ocupar todo el alto fijo
             children: [
               // ── Cabecera Compacta ─────────────────────────────────────────
               Row(
@@ -782,15 +822,24 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white24, size: 14),
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white24,
+                      size: 14,
+                    ),
                     onPressed: () => setState(() => _mostrarInfo = false),
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                    constraints: const BoxConstraints(
+                      minWidth: 24,
+                      minHeight: 24,
+                    ),
                   ),
                 ],
               ),
-              const Divider(color: Colors.white10, height: 4), // [Fase 5F] Reducido de 12
-
+              const Divider(
+                color: Colors.white10,
+                height: 4,
+              ), // [Fase 5F] Reducido de 12
               // ── Contenido con Scroll si es necesario ──────────────────────
               Flexible(
                 child: SingleChildScrollView(
@@ -825,12 +874,15 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                             fontSize: 9,
                           ),
                         ),
-                      
+
                       const SizedBox(height: 12),
 
                       // ── Costo de Movimiento ──────────────────────────────
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: hex.esTransitable
                               ? const Color(0xFF4A148C).withValues(alpha: 0.3)
@@ -869,15 +921,21 @@ class _PantallaJuegoState extends State<PantallaJuego> {
                       // ── Coordenadas y Clase ──────────────────────────────
                       Text(
                         'Pos: (${hex.q}, ${hex.r})',
-                        style: GoogleFonts.marcellus(color: Colors.white38, fontSize: 10),
+                        style: GoogleFonts.marcellus(
+                          color: Colors.white38,
+                          fontSize: 10,
+                        ),
                       ),
                       Text(
                         _descripTipoLoseta(hex.tipoLoseta),
-                        style: GoogleFonts.marcellus(color: Colors.white38, fontSize: 9),
+                        style: GoogleFonts.marcellus(
+                          color: Colors.white38,
+                          fontSize: 9,
+                        ),
                       ),
 
                       const SizedBox(height: 10),
-                      
+
                       // ── Descripción ─────────────────────────────────────
                       Text(
                         _descripcionTerreno(hex.tipo),
@@ -910,9 +968,7 @@ class _PantallaJuegoState extends State<PantallaJuego> {
         color: const Color(0xCC1A1B2D), // Vidrio esmerilado oscuro
         borderRadius: BorderRadius.circular(10), // [Fase 4E] Reducido de 15
         border: Border.all(color: Colors.white12),
-        boxShadow: const [
-          BoxShadow(color: Colors.black45, blurRadius: 10),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 10)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -940,7 +996,8 @@ class _PantallaJuegoState extends State<PantallaJuego> {
           width: 75, // [Fase 4E] Reducido de 90
           child: Text(
             etiqueta,
-            style: GoogleFonts.marcellus( // [Fase 4E] Cambio de fuente
+            style: GoogleFonts.marcellus(
+              // [Fase 4E] Cambio de fuente
               color: Colors.white70,
               fontSize: 11, // [Fase 4E] Reducido de 13
               fontWeight: FontWeight.bold,
@@ -956,7 +1013,8 @@ class _PantallaJuegoState extends State<PantallaJuego> {
           ),
           child: Text(
             valor.toString(),
-            style: GoogleFonts.marcellus( // [Fase 4E] Cambio de fuente
+            style: GoogleFonts.marcellus(
+              // [Fase 4E] Cambio de fuente
               color: Colors.white,
               fontSize: 10, // [Fase 4E] Reducido de 12
               fontWeight: FontWeight.bold,
