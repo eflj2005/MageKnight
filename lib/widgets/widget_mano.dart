@@ -357,7 +357,9 @@ class _WidgetManoState extends State<WidgetMano> with TickerProviderStateMixin {
                                             ? const Color(
                                                 0xFFFFD700,
                                               ).withValues(alpha: 0.55)
-                                            : Colors.black.withValues(alpha: 0.45),
+                                            : Colors.black.withValues(
+                                                alpha: 0.45,
+                                              ),
                                         blurRadius: isCenterFocus ? 28 : 10,
                                         spreadRadius: isCenterFocus ? 4 : 0,
                                       ),
